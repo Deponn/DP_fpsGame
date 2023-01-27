@@ -1,0 +1,6 @@
+name: DP_fpsGame_1_16_5
+version: '${version}'
+main: dp_fpsgame.dp_fpsgame.DP_fpsGame
+api-version: 1.16
+authors: [ Deponn ]
+description: fps and minecraft
