@@ -26,6 +26,10 @@ import java.util.Objects;
 public final class DP_fpsGame extends JavaPlugin implements Listener {
 
     @Override
+    public void onLoad(){
+
+    }
+    @Override
     public void onEnable() {
         getLogger().info("aaaa");
         getServer().getPluginManager().registerEvents(this, this);
