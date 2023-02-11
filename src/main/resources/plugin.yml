@@ -4,3 +4,31 @@ main: dp_fpsgame.dp_fpsgame.DP_fpsGame
 api-version: 1.16
 authors: [ Deponn ]
 description: fps and minecraft
+
+commands: #自作プラグインのコマンドを宣言
+  DpEnableFPS:
+    description: プラグインを有効にする
+    usage: /  DpEnableFPS
+    permission: fps
+  DpDisableFPS:
+    description: プラグインを無効にする
+    usage: /  DpDisableFPS
+    permission: fps
+  DpResetGame:
+    description: 初期化する
+    usage: /  DpResetGame
+    permission: fps
+  DpSetPlayMode:
+    description: モードを変える
+    usage: /  setPlayMode
+    permission: fps
+  DpSetProperties:
+    description: プロパティ変更
+    usage: /  setProperties
+    permission: fps
+
+
+permissions:
+  fps:
+    description: op only
+    default: op
