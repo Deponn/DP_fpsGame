@@ -21,7 +21,7 @@ commands: #自作プラグインのコマンドを宣言
   DpSetPlayMode:
     description: モードを変える
     usage: /  setPlayMode
-    permission: fps
+    permission: fps2
   DpSetProperties:
     description: プロパティ変更
     usage: /  setProperties
@@ -30,5 +30,8 @@ commands: #自作プラグインのコマンドを宣言
 
 permissions:
   fps:
+    description: op only
+    default: op
+  fps2:
     description: op only
     default: op

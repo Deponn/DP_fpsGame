@@ -168,7 +168,7 @@ public class PlayerOperator {
     }
 
     private int selfHeal(){
-        Objects.requireNonNull(Bukkit.getPlayer(playerName)).addPotionEffect(new PotionEffect(PotionEffectType.HEAL,40,5));
+        Objects.requireNonNull(Bukkit.getPlayer(playerName)).addPotionEffect(new PotionEffect(PotionEffectType.HEAL,20,2));
         return 10;
     }
     private int runAway(){
@@ -194,7 +194,7 @@ public class PlayerOperator {
         for(World world : worlds){
             List<Player> players = world.getPlayers();
             for(Player player: players){
-                if(player.getLocation().distance(Objects.requireNonNull(Bukkit.getPlayer(playerName)).getLocation()) < 100.0) {
+                if(player.getLocation().distance(Objects.requireNonNull(Bukkit.getPlayer(playerName)).getLocation()) < 10.0) {
                     String myTeam = getJoiningTeamName();
                     String targetTeam = op.getPlayer(player).getJoiningTeamName();
                     if (!Objects.equals(myTeam, targetTeam)) {
@@ -203,7 +203,7 @@ public class PlayerOperator {
                 }
             }
         }
-        return 30;
+        return 20;
     }
 
 
