@@ -34,12 +34,13 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
 
     private boolean isEnabledPlugin;
     private PluginOperator op;
+
     @Override
     public void onEnable() {
         isEnabledPlugin = false;
         getLogger().info("雪合戦プラグインが有効になりました。");
         getServer().getPluginManager().registerEvents(this, this);
-        for(CmdName cmdName : CmdName.values()){
+        for (CmdName cmdName : CmdName.values()) {
             Objects.requireNonNull(this.getCommand(cmdName.getCmd())).setTabCompleter(new CommandSuggest());
         }
         op = new PluginOperator(this);
@@ -49,7 +50,8 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
     public void onDisable() {
         getLogger().info("雪合戦プラグインが無効になりました。");
     }
-    public boolean isEnabledPlugin(){
+
+    public boolean isEnabledPlugin() {
         return isEnabledPlugin;
     }
 
@@ -62,21 +64,21 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                 sender.sendMessage("プラグイン有効化");
             }
             return true;
-        }else if(cmd.getName().equalsIgnoreCase(CmdName.DisableFPS.getCmd())) {
+        } else if (cmd.getName().equalsIgnoreCase(CmdName.DisableFPS.getCmd())) {
             isEnabledPlugin = false;
             if ((sender instanceof Player)) {
                 sender.sendMessage("プラグイン無効化");
             }
             return true;
         }
-        if(isEnabledPlugin) {
+        if (isEnabledPlugin) {
             if (cmd.getName().equalsIgnoreCase(CmdName.ResetGame.getCmd())) {
                 if ((sender instanceof Player)) {
                     sender.sendMessage("初期化しました。");
                 }
                 op.initialize();
                 return true;
-            }else if(cmd.getName().equalsIgnoreCase(CmdName.SetPlayMode.getCmd())){
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPlayMode.getCmd())) {
                 if ((sender instanceof Player)) {
                     ParserSetPlayMode parser = ParserSetPlayMode.Parse(sender, args);
                     if (!parser.isSuccess()) {
@@ -84,7 +86,7 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                         return true;
                     }
                     Player player = (Player) sender;
-                    if(op.isExist()) {
+                    if (op.isExist()) {
                         op.setPlayer(player);
                         op.getPlayer(player).setPlayerMode(parser.playMode);
                         sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
@@ -93,7 +95,7 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                     sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはプレイヤーのみが使えます。");
                 }
                 return true;
-            }else if(cmd.getName().equalsIgnoreCase(CmdName.SetProperties.getCmd())){
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.SetProperties.getCmd())) {
                 if ((sender instanceof Player)) {
                     ParserChangeProperties parser = ParserChangeProperties.parse(sender, args);
                     if (!parser.isSuccess()) {
@@ -136,8 +138,8 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onThrowEntity(ProjectileLaunchEvent e){
-        if(isEnabledPlugin) {
+    public void onThrowEntity(ProjectileLaunchEvent e) {
+        if (isEnabledPlugin) {
             if (e.getEntity() instanceof Snowball) {
                 Vector velocity = e.getEntity().getVelocity();
                 velocity.multiply(Const.Velocity);
@@ -149,63 +151,64 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
             }
         }
     }
+
     @EventHandler
-    public void onClickInventory(InventoryClickEvent e){
-        if(isEnabledPlugin) {
+    public void onClickInventory(InventoryClickEvent e) {
+        if (isEnabledPlugin) {
             e.setCancelled(true);
         }
     }
+
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         if (isEnabledPlugin) {
             Player player = e.getPlayer();
             try {
                 Bukkit.getLogger().info(Objects.requireNonNull(Bukkit.getPlayer(e.getPlayer().getName())).getName());
-            }catch (Exception error){
+            } catch (Exception error) {
                 Bukkit.getLogger().info(error.getMessage());
             }
             if (op.isExist()) {
                 if (op.isExistPlayer(player)) {
-                    new BukkitRunnable(){
+                    new BukkitRunnable() {
                         @Override
-                        public void run(){
+                        public void run() {
                             op.getPlayer(player).setPlayerMode(PlayMode.None);
                         }
-                    }.runTaskLater(this,2);
+                    }.runTaskLater(this, 2);
 
                 }
             }
         }
     }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         if (isEnabledPlugin) {
-            Action action = e.getAction();
+            boolean flag = false;
             Player player = e.getPlayer();
             Block block = e.getClickedBlock();
             ItemStack item = e.getItem();
             if (op.isExist() && op.isExistPlayer(player)) {
-                if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
-                    try {
-                        Material blockType = Objects.requireNonNull(block).getType();
+                if (item != null) {
+                    if (item.getType() == new ItemStack(Const.Ability1_Item).getType()) {
+                        op.getPlayer(player).useAbility1();
+                        flag = true;
+                    } else if (item.getType() == new ItemStack(Const.Ability2_Item).getType()) {
+                        op.getPlayer(player).useAbility2();
+                        flag = true;
+                    }
+                }
+                if (block != null) {
+                    if(!flag) {
+                        Material blockType = block.getType();
                         if (blockType.equals(Material.SNOW_BLOCK) || blockType.equals(Material.SNOW)) {
                             op.getPlayer(player).reload();
-                        }
-                    } catch (Exception exception) {
-                        getLogger().info(exception.getMessage());
-                    }
-                } else {
-                    if(item != null) {
-                        if (item.getType() == new ItemStack(Const.Ability1_Item).getType()) {
-                            op.getPlayer(player).useAbility1();
-                        } else if (item.getType() == new ItemStack(Const.Ability2_Item).getType()) {
-                            op.getPlayer(player).useAbility2();
                         }
                     }
                 }
             }
         }
     }
-
 }
 

@@ -28,7 +28,9 @@ public class PluginOperator {
         for (World world : worlds){
             List<Player> playerList = world.getPlayers();
             for (Player player : playerList){
-                setPlayer(player);
+                if(PlayerOperator.isJoiningTeam(player)) {
+                    setPlayer(player);
+                }
             }
         }
         prop = new MyProperties();

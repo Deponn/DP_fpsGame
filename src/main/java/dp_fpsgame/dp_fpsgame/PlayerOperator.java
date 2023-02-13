@@ -83,7 +83,18 @@ public class PlayerOperator {
     public String getJoiningTeamName(){
         return teamName;
     }
-
+    public static boolean isJoiningTeam(Player player) {
+        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+        Scoreboard scoreboard = Objects.requireNonNull(scoreboardManager).getMainScoreboard();
+        Object[] teamObjects = scoreboard.getTeams().toArray();
+        for (Object teamObj : teamObjects) {
+            Team team = (Team) teamObj;
+            if (team.hasEntry(player.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void useAbility1() {
         Player player = Bukkit.getPlayer(playerName);
