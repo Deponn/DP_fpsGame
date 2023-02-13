@@ -11,34 +11,27 @@ import java.util.Properties;
 
 public class MyProperties {
 
-    public final String Bar;
+    public final float Damage;
 
     public MyProperties() {
         File file = new File(Const.PropertiesFileName);
         Properties settings = new Properties();
-
         try {
-
-            String bar = Const.Default_Bar;
-
+            float damage = Const.Default_Damage;
             boolean flag = false;
             if (file.exists()) {
                 settings = load(file);
                 if (Objects.equals(settings.getProperty(Const.VersionPropName), Const.thisVersion)) {
-
-                    bar = settings.getProperty(Const.BarPropName);
-
+                    damage = Float.parseFloat(settings.getProperty(Const.DamagePropName));
                     flag = true;
                 }
             }
-            if(!flag){
+            if(!flag) {
                 settings.setProperty(Const.VersionPropName, Const.thisVersion);
-
-                settings.setProperty(Const.BarPropName,bar);
-
-                save(file,settings);
+                settings.setProperty(Const.DamagePropName, String.valueOf(damage));
+                save(file, settings);
             }
-            this.Bar = bar;
+            this.Damage = damage;
         } catch (IOException e) {
             Bukkit.getLogger().info(e.getMessage());
             throw new RuntimeException(e);
