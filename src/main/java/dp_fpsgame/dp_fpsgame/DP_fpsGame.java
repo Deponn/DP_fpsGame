@@ -97,7 +97,7 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                     for (World world : worlds) {
                         List<Player> players = world.getPlayers();
                         for (Player targetPlayer : players) {
-                            if (targetPlayer.getLocation().distance(commandBlock.getLocation()) < 1.0) {
+                            if (targetPlayer.getLocation().distance(commandBlock.getLocation()) < 3.0) {
                                 if (op.isExist()) {
                                     op.setPlayer(targetPlayer);
                                     op.getPlayer(targetPlayer).setPlayerMode(parser.playMode);
