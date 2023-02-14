@@ -146,11 +146,6 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         if (isEnabledPlugin) {
             Player player = e.getPlayer();
-            try {
-                Bukkit.getLogger().info(Objects.requireNonNull(Bukkit.getPlayer(e.getPlayer().getName())).getName());
-            } catch (Exception error) {
-                Bukkit.getLogger().info(error.getMessage());
-            }
             if (op.isExist()) {
                 if (op.isExistPlayer(player)) {
                     new BukkitRunnable() {

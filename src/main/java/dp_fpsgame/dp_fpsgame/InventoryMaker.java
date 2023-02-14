@@ -23,7 +23,7 @@ public class InventoryMaker {
         Objects.requireNonNull(bookMeta).setTitle("モード選択");
         bookMeta.setAuthor("Deponn");
         for(PlayMode mode :  PlayMode.values()) {
-            if(mode != PlayMode.None) {
+            if(PlayMode.isGameMode(mode)) {
                 BaseComponent[] page = new ComponentBuilder(mode.getExp())
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/Dp" + CmdName.SetPlayMode + " " + mode.getString()))
                         .create();
