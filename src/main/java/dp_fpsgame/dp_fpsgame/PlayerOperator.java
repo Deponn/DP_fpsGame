@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -27,6 +28,7 @@ public class PlayerOperator {
     private PlayMode playMode;
     private boolean isInvincible;
     private final String teamName;
+    private boolean snowBallFlag = true;
 
     public PlayerOperator(Player player,DP_fpsGame parent,PluginOperator op){
         this.op = op;
@@ -100,19 +102,28 @@ public class PlayerOperator {
     public void lunchSnowBall(){
         Player player = Bukkit.getPlayer(playerName);
         if(player != null) {
-            Snowball snowball = player.launchProjectile(Snowball.class);
-            Vector velocity = snowball.getVelocity();
-            velocity.multiply(Const.Velocity);
-            snowball.setVelocity(velocity);
-            InventoryMaker.useSnowBall(player.getInventory());
-            playSound(player,Sound.ENTITY_SNOWBALL_THROW);
+            if(snowBallFlag) {
+                Snowball snowball = player.launchProjectile(Snowball.class);
+                Vector velocity = snowball.getVelocity();
+                velocity.multiply(Const.Velocity);
+                snowball.setVelocity(velocity);
+                InventoryMaker.useSnowBall(player.getInventory());
+                playSound(player, Sound.ENTITY_SNOWBALL_THROW);
+                snowBallFlag = false;
+                new BukkitRunnable(){
+                    @Override
+                    public void run(){
+                        snowBallFlag = true;
+                    }
+                }.runTaskLater(parent,2);
+            }
         }
     }
     public void useAbility1() {
         Player player = Bukkit.getPlayer(playerName);
         Inventory inventory = Objects.requireNonNull(player).getInventory();
         ItemStack item = inventory.getItem(Const.progressSlot1);
-        if (item != null && item.getAmount() == Const.maxNum) {
+        if (item != null && item.getAmount() >= Const.maxNum) {
             int period = 10;
             if(playMode == PlayMode.Skirmisher){
                 period = runFast();
@@ -127,13 +138,12 @@ public class PlayerOperator {
             ProgressTask task1 = new ProgressTask(inventory, Const.progressSlot1, parent);
             task1.runTaskTimer(parent, 1, period);
         }
-
     }
     public void useAbility2(){
         Player player = Bukkit.getPlayer(playerName);
         Inventory inventory = Objects.requireNonNull(player).getInventory();
         ItemStack item = inventory.getItem(Const.progressSlot2);
-        if (item != null && item.getAmount() == Const.maxNum) {
+        if (item != null && item.getAmount() >= Const.maxNum) {
             int period = 10;
             if(playMode == PlayMode.Skirmisher){
                 period = jumpHigher();

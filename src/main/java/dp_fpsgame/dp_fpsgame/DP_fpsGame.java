@@ -10,6 +10,7 @@ import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.PlayMode;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.CommandBlock;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
@@ -21,8 +22,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -75,20 +79,35 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                 op.initialize();
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPlayMode.getCmd())) {
+                ParserSetPlayMode parser = ParserSetPlayMode.Parse(sender, args);
+                if (!parser.isSuccess()) {
+                    // パース失敗
+                    return true;
+                }
                 if ((sender instanceof Player)) {
-                    ParserSetPlayMode parser = ParserSetPlayMode.Parse(sender, args);
-                    if (!parser.isSuccess()) {
-                        // パース失敗
-                        return true;
-                    }
                     Player player = (Player) sender;
                     if (op.isExist()) {
                         op.setPlayer(player);
                         op.getPlayer(player).setPlayerMode(parser.playMode);
                         sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
                     }
-                } else {
-                    sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはプレイヤーのみが使えます。");
+                } else if( (sender instanceof CommandBlock)){
+                    CommandBlock commandBlock = (CommandBlock)sender;
+                    List<World> worlds = Bukkit.getWorlds();
+                    for (World world : worlds) {
+                        List<Player> players = world.getPlayers();
+                        for (Player targetPlayer : players) {
+                            if (targetPlayer.getLocation().distance(commandBlock.getLocation()) < 1.0) {
+                                if (op.isExist()) {
+                                    op.setPlayer(targetPlayer);
+                                    op.getPlayer(targetPlayer).setPlayerMode(parser.playMode);
+                                    sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
+                                }
+                            }
+                        }
+                    }
+                }else {
+                    sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはコマブロとプレイヤーのみが使えます。");
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetProperties.getCmd())) {

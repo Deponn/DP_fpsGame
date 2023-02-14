@@ -3,10 +3,10 @@ package dp_fpsgame.dp_fpsgame.PropertiesAndConstant;
 public enum PlayMode {
 
     None("None","何も役職がありません","none","none"),
-    Duelist("Duelist","戦う役職","回復する","虚空みたいなやつ"),
-    Supporter("Supporter","サポートする","バフポーション","スキャン"),
-    Controller("Controller","技を駆使して戦う","浮き上がるポーション","毒ポーション"),
-    Skirmisher("Skirmisher","走り回る","速く走る","ジャンプが高くなる");
+    Duelist("Duelist","自己回復したり、虚空みたいなことができる。","回復する","虚空みたいなやつ"),
+    Supporter("Supporter","バフポーションを投げたりスキャンができる。","バフポーション","スキャン"),
+    Controller("Controller","浮き上がるポーションを投げたり、毒ポーションを投げたりできる。","浮き上がるポーション","毒ポーション"),
+    Skirmisher("Skirmisher","走るスピードが速くなったりジャンプ力が上がったりする。","速く走る","ジャンプが高くなる");
 
     private final String Name;
     private final String Exp;
