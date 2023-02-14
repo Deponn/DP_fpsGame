@@ -5,7 +5,7 @@ public enum PlayMode {
     None("None","何も役職がありません","none","none"),
     Duelist("Duelist","戦う役職","回復する","虚空みたいなやつ"),
     Supporter("Supporter","サポートする","バフポーション","スキャン"),
-    Controller("Controller","技を駆使して戦う","移動速度低下ポーション","盲目ポーション"),
+    Controller("Controller","技を駆使して戦う","浮き上がるポーション","毒ポーション"),
     Skirmisher("Skirmisher","走り回る","速く走る","ジャンプが高くなる");
 
     private final String Name;

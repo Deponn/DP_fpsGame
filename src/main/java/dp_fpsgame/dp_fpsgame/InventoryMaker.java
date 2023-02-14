@@ -63,4 +63,9 @@ public class InventoryMaker {
         inv.setItem(Const.snowBallSlot,snowBall);
     }
 
+    public static void useSnowBall(Inventory inv){
+        int snowBallNum = Objects.requireNonNull(inv.getItem(Const.snowBallSlot)).getAmount();
+        ItemStack snowBall = new ItemStack(Const.SNOWBALL,snowBallNum - 1);
+        inv.setItem(Const.snowBallSlot,snowBall);
+    }
 }

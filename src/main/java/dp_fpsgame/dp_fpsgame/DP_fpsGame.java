@@ -13,9 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -25,7 +22,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
@@ -132,22 +128,9 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                             }
                         }
                     }
+                }else {
+                    e.setDamage(20.0);
                 }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onThrowEntity(ProjectileLaunchEvent e) {
-        if (isEnabledPlugin) {
-            if (e.getEntity() instanceof Snowball) {
-                Vector velocity = e.getEntity().getVelocity();
-                velocity.multiply(Const.Velocity);
-                e.getEntity().setVelocity(velocity);
-            } else if (e.getEntity() instanceof ThrownPotion) {
-                Vector velocity = e.getEntity().getVelocity();
-                velocity.multiply(Const.Velocity);
-                e.getEntity().setVelocity(velocity);
             }
         }
     }
@@ -204,6 +187,14 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                         Material blockType = block.getType();
                         if (blockType.equals(Material.SNOW_BLOCK) || blockType.equals(Material.SNOW)) {
                             op.getPlayer(player).reload();
+                            flag = true;
+                        }
+                    }
+                }
+                if (item != null) {
+                    if(!flag) {
+                        if (item.getType() == new ItemStack(Const.SNOWBALL).getType()) {
+                            op.getPlayer(player).lunchSnowBall();
                         }
                     }
                 }

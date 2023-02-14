@@ -33,5 +33,5 @@ permissions:
     description: op only
     default: op
   fps2:
-    description: op only
-    default: op
+    description: everyone
+    default: true
