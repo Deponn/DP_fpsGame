@@ -115,7 +115,7 @@ public class PlayerOperator {
                     public void run(){
                         snowBallFlag = true;
                     }
-                }.runTaskLater(parent,2);
+                }.runTaskLater(parent,5);
             }
         }
     }
