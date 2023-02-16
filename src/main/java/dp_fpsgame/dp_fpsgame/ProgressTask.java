@@ -1,12 +1,10 @@
 package dp_fpsgame.dp_fpsgame;
 
 import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.Const;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Objects;
 
 public class ProgressTask extends BukkitRunnable {
 

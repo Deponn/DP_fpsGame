@@ -10,7 +10,7 @@ import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.PlayMode;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.CommandBlock;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
@@ -22,8 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -72,7 +70,7 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
             return true;
         }
         if (isEnabledPlugin) {
-            if (cmd.getName().equalsIgnoreCase(CmdName.ResetGame.getCmd())) {
+            if (cmd.getName().equalsIgnoreCase(CmdName.InitializeGame.getCmd())) {
                 if ((sender instanceof Player)) {
                     sender.sendMessage("初期化しました。");
                 }
@@ -91,22 +89,26 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                         op.getPlayer(player).setPlayerMode(parser.playMode);
                         sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
                     }
-                } else if( (sender instanceof CommandBlock)){
-                    CommandBlock commandBlock = (CommandBlock)sender;
-                    List<World> worlds = Bukkit.getWorlds();
-                    for (World world : worlds) {
-                        List<Player> players = world.getPlayers();
-                        for (Player targetPlayer : players) {
-                            if (targetPlayer.getLocation().distance(commandBlock.getLocation()) < 3.0) {
-                                if (op.isExist()) {
-                                    op.setPlayer(targetPlayer);
-                                    op.getPlayer(targetPlayer).setPlayerMode(parser.playMode);
-                                    sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
+                } else if (sender instanceof BlockCommandSender) {
+                    try {
+                        BlockCommandSender commandBlock = (BlockCommandSender) sender;
+                        List<World> worlds = Bukkit.getWorlds();
+                        for (World world : worlds) {
+                            List<Player> players = world.getPlayers();
+                            for (Player targetPlayer : players) {
+                                if (targetPlayer.getLocation().distance(commandBlock.getBlock().getLocation()) < 2.0) {
+                                    if (op.isExist()) {
+                                        op.setPlayer(targetPlayer);
+                                        op.getPlayer(targetPlayer).setPlayerMode(parser.playMode);
+                                        sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
+                                    }
                                 }
                             }
                         }
+                    } catch (Exception e) {
+                        getLogger().info(e.getMessage());
                     }
-                }else {
+                } else {
                     sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはコマブロとプレイヤーのみが使えます。");
                 }
                 return true;
@@ -127,7 +129,6 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
         }
         return true;
     }
-
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent e) {
@@ -216,4 +217,42 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
         }
     }
 }
+
+/*
+opじゃないと選択できない
+死ぬと職業リセット
+弾めっちゃ早く打てる
+ジャンプ効果が切れるとダメージ食らっちゃう
+ジョブの名前
+クールタイムの説明
+企画の見栄え的なものを意識したい
+リロードできない場所があったら面白い
+鎧も脱げちゃう
+
+
+・攻城戦の舞台設定→企画枠採用のさきちゃんやﾀﾜｹさんの意見を聞いたほうがいいかも
+[23:24]
+・ジョブの名前？→舞台設定と合わせて、分かりやすいものにしたほうがいいかも？
+[23:24]
+・攻城戦鯖での仕様→ぽてちさんとかに確認
+[23:25]
+・舞台設定の如何によっては建築勢へのヘルプが必要かも
+[23:25]
+・KUNさんのとっさの要望に応えられるような余白？
+[23:26]
+例）チームを増やす、死んだらスペク、分数
+[23:27]
+例）チケット制を想定していたが、大将戦やビーコン戦になる可能性？
+[23:28]
+これら含めて、長くやってきた参加勢に聞いたほうがいい
+
+⚠咳が止まらない — 昨日 23:30
+完成近くになったら参加勢にテストプレイを頼む
+[23:37]
+・死んだらジョブがリセットされる仕様が果たしてKUNさんに合うのかどうか（煩わしく思われないか）
+
+
+⚠咳が止まらない — 昨日 23:59
+・雪（弾薬）を多く配給して、その代わりに弾薬の補給場所を限定的にするという選択肢
+ */
 

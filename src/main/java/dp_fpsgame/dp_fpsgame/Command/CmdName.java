@@ -5,7 +5,7 @@ public enum CmdName {
 
     EnableFPS("DpEnableFPS"),
     DisableFPS("DpDisableFPS"),
-    ResetGame("DpResetGame"),
+    InitializeGame("DpInitializeGame"),
     SetPlayMode("DpSetPlayMode"),
     SetProperties("DpSetProperties");
 

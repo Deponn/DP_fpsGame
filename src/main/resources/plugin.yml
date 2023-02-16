@@ -14,9 +14,9 @@ commands: #自作プラグインのコマンドを宣言
     description: プラグインを無効にする
     usage: /  DpDisableFPS
     permission: fps
-  DpResetGame:
+  DpInitializeGame:
     description: 初期化する
-    usage: /  DpResetGame
+    usage: /  DpInitializeGame
     permission: fps
   DpSetPlayMode:
     description: モードを変える

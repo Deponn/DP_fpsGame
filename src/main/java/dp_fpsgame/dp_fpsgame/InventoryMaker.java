@@ -17,14 +17,16 @@ import java.util.Objects;
 public class InventoryMaker {
 
     public static void addBook(Inventory inv){
-        inv.clear();
+        clear(inv);
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookMeta = (BookMeta) book.getItemMeta();
         Objects.requireNonNull(bookMeta).setTitle("モード選択");
         bookMeta.setAuthor("Deponn");
+        BaseComponent[] page = new ComponentBuilder(Const.Exp).create();
+        bookMeta.spigot().addPage(page);
         for(PlayMode mode :  PlayMode.values()) {
             if(PlayMode.isGameMode(mode)) {
-                BaseComponent[] page = new ComponentBuilder(mode.getExp())
+                page = new ComponentBuilder(mode.getExp())
                         .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/Dp" + CmdName.SetPlayMode + " " + mode.getString()))
                         .create();
                 bookMeta.spigot().addPage(page);
@@ -35,7 +37,7 @@ public class InventoryMaker {
     }
 
     public static void setGameItems(Inventory inv, PlayMode mode){
-        inv.clear();
+        clear(inv);
         ItemStack food = new ItemStack(Const.FOOD,Const.foodNum);
         ItemStack snowBall = new ItemStack(Const.SNOWBALL,Const.snowBallNum);
         ItemStack ability1Item = new ItemStack(Const.Ability1_Item,1);
@@ -67,5 +69,11 @@ public class InventoryMaker {
         int snowBallNum = Objects.requireNonNull(inv.getItem(Const.snowBallSlot)).getAmount();
         ItemStack snowBall = new ItemStack(Const.SNOWBALL,snowBallNum - 1);
         inv.setItem(Const.snowBallSlot,snowBall);
+    }
+
+    public static void clear(Inventory inventory){
+        for (int i = 0; i < 36; i++) {
+            inventory.clear(i);
+        }
     }
 }

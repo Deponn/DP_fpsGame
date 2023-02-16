@@ -1,7 +1,6 @@
 package dp_fpsgame.dp_fpsgame;
 
 import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.MyProperties;
-import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.PlayMode;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

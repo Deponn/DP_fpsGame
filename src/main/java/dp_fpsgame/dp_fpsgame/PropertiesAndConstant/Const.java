@@ -16,7 +16,10 @@ public class Const {
     public static final int progressSlot2 = 5;
     public static final int snowBallNum = 21;
     public static final int foodNum = 64;
-    public static final int maxNum = 61;
+    public static final int maxNum = 64;
+    public static final String Exp = "雪を持って右クリックまたは左クリックで雪玉を発射する。鉄インゴットまたは金インゴットをクリックすると" +
+            "アビリティみたいなことができる。クールタイムがある。鉄塊や金塊の数が溜まっていき64になったら再度使える。ポーションは敵味方関係ないので" +
+            "注意しなければならない。";
     public static final Material Ability1_Item = Material.IRON_INGOT;
     public static final Material Ability2_Item = Material.GOLD_INGOT;
     public static final Material FOOD = Material.COOKED_BEEF;
