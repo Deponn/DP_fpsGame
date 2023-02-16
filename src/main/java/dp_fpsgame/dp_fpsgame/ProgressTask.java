@@ -12,7 +12,7 @@ public class ProgressTask extends BukkitRunnable {
     private final int slot;
     private final DP_fpsGame parent;
 
-    public ProgressTask(Inventory inventory, int slot,DP_fpsGame parent) {
+    public ProgressTask(Inventory inventory, int slot, DP_fpsGame parent) {
         this.inv = inventory;
         this.slot = slot;
         this.parent = parent;
@@ -25,17 +25,19 @@ public class ProgressTask extends BukkitRunnable {
             if (item != null) {
                 int itemNum = item.getAmount();
                 itemNum += 3;
-                if (itemNum <= Const.maxNum) {
+                if (itemNum < Const.maxNum) {
                     item.setAmount(itemNum);
+                } else if (itemNum == Const.maxNum) {
+                    item.setAmount(itemNum);
+                    cancel();
                 } else {
                     cancel();
                 }
             } else {
                 cancel();
             }
-        }else {
+        } else {
             cancel();
         }
     }
-
 }

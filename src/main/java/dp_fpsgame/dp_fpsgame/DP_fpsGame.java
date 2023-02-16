@@ -87,7 +87,6 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                     if (op.isExist()) {
                         op.setPlayer(player);
                         op.getPlayer(player).setPlayerMode(parser.playMode);
-                        sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
                     }
                 } else if (sender instanceof BlockCommandSender) {
                     try {
@@ -100,7 +99,6 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                                     if (op.isExist()) {
                                         op.setPlayer(targetPlayer);
                                         op.getPlayer(targetPlayer).setPlayerMode(parser.playMode);
-                                        sender.sendMessage(ChatColor.GREEN + parser.playMode.getExp());
                                     }
                                 }
                             }
@@ -138,8 +136,8 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                 Player player = Bukkit.getPlayer(entityName);
                 if (player != null) {
                     if (op.isExist()) {
-                        if (op.isExistPlayer(player)) {
-                            Player shooter = (Player) Objects.requireNonNull(((Snowball) e.getDamager()).getShooter());
+                        Player shooter = (Player) Objects.requireNonNull(((Snowball) e.getDamager()).getShooter());
+                        if (op.isExistPlayer(player) && op.isExistPlayer(shooter)) {
                             if (!Objects.equals(op.getPlayer(shooter).getJoiningTeamName(), op.getPlayer(player).getJoiningTeamName())) {
                                 if (!op.getPlayer(player).isInvincible()) {
                                     // ダメージ量の設定

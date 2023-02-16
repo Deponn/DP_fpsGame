@@ -2,6 +2,7 @@ package dp_fpsgame.dp_fpsgame;
 
 import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.Const;
 import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.PlayMode;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -42,6 +43,7 @@ public class PlayerOperator {
     public void setPlayerMode(PlayMode mode){
         playMode = mode;
         if(PlayMode.isGameMode(mode)){
+            Objects.requireNonNull(Bukkit.getPlayer(playerName)).sendMessage(ChatColor.GREEN + mode.getExp());
             setInGameInventory();
         }else {
             setNonGameInventory();
@@ -201,8 +203,8 @@ public class PlayerOperator {
             PotionMeta meta = (PotionMeta) potion.getItemMeta();
             if (meta != null) {
                 meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 40, 1), true);
-                meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1), true);
-                meta.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 40, 1), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 40, 2), true);
             }
             potion.setItemMeta(meta);
             ThrownPotion thrownPotion = player.launchProjectile(ThrownPotion.class);
@@ -231,6 +233,12 @@ public class PlayerOperator {
             new ParticleTask(player, 17, Particle.EXPLOSION_NORMAL).runTaskTimer(parent, 0, 5);
             isInvincible = true;
             playSound(player,Sound.ENTITY_ARROW_SHOOT);
+            new BukkitRunnable(){
+                @Override
+                public void run(){
+                    isInvincible = false;
+                }
+            }.runTaskLater(parent,80);
         }
         return 25;
     }
