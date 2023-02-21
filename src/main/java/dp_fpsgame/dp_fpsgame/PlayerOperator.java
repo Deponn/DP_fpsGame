@@ -53,7 +53,7 @@ public class PlayerOperator {
     private void setInGameInventory(){
         Player player = Bukkit.getPlayer(playerName);
         Inventory inventory = Objects.requireNonNull(player).getInventory();
-        InventoryMaker.setGameItems(inventory,playMode);
+        InventoryMaker.setGameItems(inventory,playMode,op.getProp().SnowBallNum);
     }
     private void setNonGameInventory() {
         Player player = Bukkit.getPlayer(playerName);
@@ -69,7 +69,7 @@ public class PlayerOperator {
         Player player = Bukkit.getPlayer(playerName);
         if(PlayMode.isGameMode(playMode)) {
             Inventory inventory = Objects.requireNonNull(player).getInventory();
-            InventoryMaker.addSnowBall(inventory);
+            InventoryMaker.addSnowBall(inventory,op.getProp().SnowBallNum);
         }
     }
 
@@ -104,20 +104,22 @@ public class PlayerOperator {
     public void lunchSnowBall(){
         Player player = Bukkit.getPlayer(playerName);
         if(player != null) {
-            if(snowBallFlag) {
-                Snowball snowball = player.launchProjectile(Snowball.class);
-                Vector velocity = snowball.getVelocity();
-                velocity.multiply(Const.Velocity);
-                snowball.setVelocity(velocity);
-                InventoryMaker.useSnowBall(player.getInventory());
-                playSound(player, Sound.ENTITY_SNOWBALL_THROW);
-                snowBallFlag = false;
-                new BukkitRunnable(){
-                    @Override
-                    public void run(){
-                        snowBallFlag = true;
-                    }
-                }.runTaskLater(parent,5);
+            if(!isInvincible) {
+                if (snowBallFlag) {
+                    Snowball snowball = player.launchProjectile(Snowball.class);
+                    Vector velocity = snowball.getVelocity();
+                    velocity.multiply(Const.Velocity);
+                    snowball.setVelocity(velocity);
+                    InventoryMaker.useSnowBall(player.getInventory());
+                    playSound(player, Sound.ENTITY_SNOWBALL_THROW);
+                    snowBallFlag = false;
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            snowBallFlag = true;
+                        }
+                    }.runTaskLater(parent, op.getProp().LaunchDelay);
+                }
             }
         }
     }
@@ -165,10 +167,10 @@ public class PlayerOperator {
     private int runFast(){
         Player player = Bukkit.getPlayer(playerName);
         if(player != null) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 120, 2));
             playSound(player,Sound.ENTITY_ARROW_SHOOT);
         }
-        return 5;
+        return op.getProp().RunCoolTime;
     }
     private int jumpHigher(){
         Player player = Bukkit.getPlayer(playerName);
@@ -176,7 +178,7 @@ public class PlayerOperator {
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 40, 5));
             playSound(player,Sound.ENTITY_ARROW_SHOOT);
         }
-        return 5;
+        return op.getProp().JumpCoolTime;
     }
 
     private int LevitationPotion(){
@@ -186,14 +188,13 @@ public class PlayerOperator {
             PotionMeta meta = (PotionMeta) potion.getItemMeta();
             if (meta != null) {
                 meta.addCustomEffect(new PotionEffect(PotionEffectType.LEVITATION, 40, 5), true);
-                meta.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 80, 5), true);
             }
             potion.setItemMeta(meta);
             ThrownPotion thrownPotion = player.launchProjectile(ThrownPotion.class);
             thrownPotion.setItem(potion);
             playSound(player,Sound.ENTITY_LINGERING_POTION_THROW);
         }
-        return 10;
+        return op.getProp().LeviCoolTime;
     }
 
     private int PoisonPotion(){
@@ -202,9 +203,9 @@ public class PlayerOperator {
             ItemStack potion = new ItemStack(Material.LINGERING_POTION);
             PotionMeta meta = (PotionMeta) potion.getItemMeta();
             if (meta != null) {
-                meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 40, 1), true);
-                meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2), true);
-                meta.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 40, 2), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 1), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW, 80, 2), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.POISON, 80, 2), true);
             }
             potion.setItemMeta(meta);
             ThrownPotion thrownPotion = player.launchProjectile(ThrownPotion.class);
@@ -214,16 +215,16 @@ public class PlayerOperator {
             thrownPotion.setVelocity(velocity);
             playSound(player,Sound.ENTITY_LINGERING_POTION_THROW);
         }
-        return 25;
+        return op.getProp().PoisonCoolTime;
     }
 
     private int selfHeal(){
         Player player = Bukkit.getPlayer(playerName);
         if(player != null) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 20, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 1));
             playSound(player,Sound.ENTITY_PLAYER_LEVELUP);
         }
-        return 10;
+        return op.getProp().HealCoolTime;
     }
     private int runAway(){
         Player player = Bukkit.getPlayer(playerName);
@@ -240,7 +241,7 @@ public class PlayerOperator {
                 }
             }.runTaskLater(parent,80);
         }
-        return 25;
+        return op.getProp().RunAwayCoolTime;
     }
 
     private int BuffPotion(){
@@ -248,13 +249,13 @@ public class PlayerOperator {
         if(player != null) {
             ItemStack potion = new ItemStack(Material.LINGERING_POTION);
             PotionMeta meta = (PotionMeta) potion.getItemMeta();
-            Objects.requireNonNull(meta).addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 40, 1), true);
+            Objects.requireNonNull(meta).addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 80, 1), true);
             potion.setItemMeta(meta);
             ThrownPotion thrownPotion = player.launchProjectile(ThrownPotion.class);
             thrownPotion.setItem(potion);
             playSound(player, Sound.ENTITY_LINGERING_POTION_THROW);
         }
-        return 15;
+        return op.getProp().BuffCoolTime;
     }
     private int scan(){
         Player player = Bukkit.getPlayer(playerName);
@@ -267,7 +268,7 @@ public class PlayerOperator {
                         String myTeam = getJoiningTeamName();
                         String targetTeam = op.getPlayer(targetPlayer).getJoiningTeamName();
                         if (!Objects.equals(myTeam, targetTeam)) {
-                            targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 1));
+                            targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 80, 1));
                             playSound(targetPlayer,Sound.ENTITY_IRON_GOLEM_DAMAGE);
                         }
                     }
@@ -275,10 +276,10 @@ public class PlayerOperator {
             }
             playSound(player,Sound.ENTITY_ARROW_SHOOT);
         }
-        return 20;
+        return op.getProp().ScanCoolTime;
     }
 
-    private void playSound(Player player,Sound sound){
+    public void playSound(Player player,Sound sound){
         player.getWorld().playSound(player.getLocation(),sound,1,1);
     }
 

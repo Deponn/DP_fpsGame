@@ -17,6 +17,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.EventHandler;
@@ -142,6 +144,7 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
                                 if (!op.getPlayer(player).isInvincible()) {
                                     // ダメージ量の設定
                                     e.setDamage(op.getProp().Damage);
+                                    shooter.getWorld().playSound(shooter.getLocation(),Sound.ENTITY_ARROW_HIT_PLAYER,0.15f,1);
                                 }
                             }
                         }
@@ -158,6 +161,12 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
         if (isEnabledPlugin) {
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+        event.setCancelled(true);
+        event.getPlayer().updateInventory();
     }
 
     @EventHandler
@@ -185,7 +194,9 @@ public final class DP_fpsGame extends JavaPlugin implements Listener {
             Player player = e.getPlayer();
             Block block = e.getClickedBlock();
             ItemStack item = e.getItem();
-            if (op.isExist() && op.isExistPlayer(player)) {
+            if (e.getHand() == EquipmentSlot.OFF_HAND) {
+                e.setCancelled(true);
+            }else if (op.isExist() && op.isExistPlayer(player)) {
                 if (item != null) {
                     if (item.getType() == new ItemStack(Const.Ability1_Item).getType()) {
                         op.getPlayer(player).useAbility1();
@@ -252,5 +263,18 @@ opじゃないと選択できない
 
 ⚠咳が止まらない — 昨日 23:59
 ・雪（弾薬）を多く配給して、その代わりに弾薬の補給場所を限定的にするという選択肢
+
+
+
+虚空中打てちゃう
+回復強すぎ
+壁高くしよう
+耐性長くしたい
+浮遊のジャンプなくす
+リスキルなくしたい
+Fキーで連射できちゃう
+
  */
+
+
 

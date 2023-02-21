@@ -57,16 +57,19 @@ public class CommandSuggest implements TabCompleter{
      */
     private static List<String> Suggest_Properties(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
-        List<String> suggestList = new ArrayList<>();
-        String Dmg = "-" + Const.DamagePropName;
-        if (argsList.size() > 1 && argsList.get(argsList.size() - 2).equals(Dmg)) {
-            return Arrays.asList("1","5","10");
-        }else if(argsList.size() == 1) {
-            return Stream.of(Dmg)
-                    .filter(s -> !argsList.contains(s))
-                    .collect(Collectors.toList());
+        List<String> propList = new ArrayList<>();
+        for(String propName : Const.getPropNames()){
+            propList.add("-" + propName);
+        }
+        for(String propName :propList){
+            if (argsList.size() > 1 && argsList.get(argsList.size() - 2).equals(propName)) {
+                return Arrays.asList("1","5","10");
+            }
+        }
+        if(argsList.size() == 1) {
+            return propList;
         }else {
-            return suggestList;
+            return new ArrayList<>();
         }
     }
 }

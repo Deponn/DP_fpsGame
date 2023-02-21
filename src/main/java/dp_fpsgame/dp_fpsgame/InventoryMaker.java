@@ -2,6 +2,7 @@ package dp_fpsgame.dp_fpsgame;
 
 import dp_fpsgame.dp_fpsgame.Command.CmdName;
 import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.Const;
+import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.MyProperties;
 import dp_fpsgame.dp_fpsgame.PropertiesAndConstant.PlayMode;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -36,10 +37,10 @@ public class InventoryMaker {
         inv.setItem(0,book);
     }
 
-    public static void setGameItems(Inventory inv, PlayMode mode){
+    public static void setGameItems(Inventory inv, PlayMode mode,int snowBallNum){
         clear(inv);
         ItemStack food = new ItemStack(Const.FOOD,Const.foodNum);
-        ItemStack snowBall = new ItemStack(Const.SNOWBALL,Const.snowBallNum);
+        ItemStack snowBall = new ItemStack(Const.SNOWBALL,snowBallNum);
         ItemStack ability1Item = new ItemStack(Const.Ability1_Item,1);
         ItemStack ability2Item = new ItemStack(Const.Ability2_Item,1);
         ItemStack ability1ProgressItem = new ItemStack(Const.Ability1_Progress_Item,Const.maxNum);
@@ -60,8 +61,8 @@ public class InventoryMaker {
         inv.setItem(Const.progressSlot1,ability1ProgressItem);
         inv.setItem(Const.progressSlot2,ability2ProgressItem);
     }
-    public static void addSnowBall(Inventory inv){
-        ItemStack snowBall = new ItemStack(Const.SNOWBALL,Const.snowBallNum);
+    public static void addSnowBall(Inventory inv, int snowBallNum){
+        ItemStack snowBall = new ItemStack(Const.SNOWBALL,snowBallNum);
         inv.setItem(Const.snowBallSlot,snowBall);
     }
 
